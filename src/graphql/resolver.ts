@@ -27,9 +27,12 @@ export const resolvers = {
         }
     },
     Query: {
-        listEvents: async (parent, {}, {dataSources: {UserAPI}}, info) => {
+        listEvents: async (parent, {}, {dataSources: {UserAPI,EventAPI}, userId}, info) => {
             try {
-
+                if (!userId)    throw new Error('You must be logged in!');
+                const {events} = await EventAPI.listEvents(userId);
+                
+                return events;
             } catch (e) {
                 return {message: e.message};
             }

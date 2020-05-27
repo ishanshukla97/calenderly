@@ -71,4 +71,12 @@ export class EventAPI extends DataSource {
         
         return {event: {id: newUser.id, ...eventData}};
     }
+    async listEvents (userId: string): Promise<{events: any[] | Error}> {
+        const eventsRef = await admin.firestore().collection(DB.EVENTS).where('userId', '==', userId).get();
+        const events = [];
+        for (const event of eventsRef.docs) {
+            events.push(await event.data());
+        }
+        return {events};
+    }
 }
